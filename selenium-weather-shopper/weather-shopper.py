@@ -1,3 +1,6 @@
+''' This script of selenium lets you select between sunscreen 
+and moisturizer by checking with the temperature provided in the webpage'''
+
 from selenium import webdriver
 import time
 from selenium.webdriver.common.keys import Keys 
@@ -19,10 +22,10 @@ temp3 = int(temp3)+0
 if temp3>34:
     button=driver.find_element_by_xpath("//button[contains(.,'Buy sunscreens')]")
     button.click()
-    print("It is hot")
+    print("It is hot you need to go with the sunscreen")
 elif temp3<19:
     button = button.find_element_by_xpath("//button[contains(.,'Buy moisturizers')]")
-    print("It is Cold")
+    print("It is Cold better choose moisturizer")
 else:
     print("The temperature is normal")
 
