@@ -1,1 +1,1 @@
- 
+ ### With the information about the temperature provided in the page this script tells you whether to select between moisturizer to take care of your screen or sunscreen to help your skin from the scroching sun.
