@@ -53,6 +53,11 @@ cart=driver.find_element_by_id("cart")
 cart.click()
 time.sleep(5)
 
+if(driver.current_url == "http://weathershopper.pythonanywhere.com/cart"):
+    print("Successfully Added")
+else:
+    print("Failure")
+
 #closing the driver
 driver.quit()
 
