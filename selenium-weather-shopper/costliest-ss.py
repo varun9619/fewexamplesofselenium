@@ -58,6 +58,7 @@ if(driver.current_url == "http://weathershopper.pythonanywhere.com/cart"):
 else:
     print("Failure")
 
+time.sleep(2)
 #closing the driver
 driver.quit()
 
