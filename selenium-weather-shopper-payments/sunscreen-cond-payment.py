@@ -1,5 +1,5 @@
 '''
-Finding least expensive Moisturizer based on the condition and doing payment Program: 
+Finding least expensive Sunscreen based on the SPF-condition and doing payment Program: 
 Used this site  https://weathershopper.pythonanywhere.com/sunscreen
 ----------------------------------
 Python 3.7.0 and Selenium 3.141.0
@@ -9,7 +9,7 @@ E-mail : tcvarun96@gmail.com'''
 
 import time
 from selenium import webdriver
-import rand_email
+import rand_email  #getting the rand_email script which contains random email,phone num, zip code ,cvv
 
 
 driver=webdriver.Firefox()
@@ -31,6 +31,7 @@ for j in driver2:
     list_to_append_driver2_text_values.append(j.text.split("\n"))
     list_for_driver2_values.append(j.text)
 
+# Creating two pseudo lists for spliting the price based on the users requirment
 psuedo_list1_to_get_int_values = list_for_driver2_values[:3] 
 list_to_store_int_values = [int(sub.split('.')[1]) for sub in psuedo_list1_to_get_int_values]
 
@@ -39,18 +40,15 @@ list2_to_store_int_values = [int(sub.split(':')[1]) for sub in psuedo_list2_to_g
 
 #concatenating the above two pseudo lists to as int
 concat_list = list_to_store_int_values+list2_to_store_int_values
-
 Dict = dict(zip(list_for_driver1_values, concat_list))
 
+#filterning the dictionary for Aloe and Almond
 filtered_dict_for_SPF_50 = {list_for_driver1_values:concat_list for (list_for_driver1_values, concat_list) in Dict.items() if 'SPF-50' in list_for_driver1_values}
-
 filtered_dict_for_SPF_30 = {list_for_driver1_values:concat_list for (list_for_driver1_values, concat_list) in Dict.items() if 'SPF-30' in list_for_driver1_values}
 
-
-
+#finding out which aloe and almond has lowest price.
 min_val_of_SPF_50 = min(filtered_dict_for_SPF_50, key=lambda x: filtered_dict_for_SPF_50.get(x))
 print(min_val_of_SPF_50, "has the lowest price in SPF-50 category")
-
 
 min_val_of_SPF_30 = min(filtered_dict_for_SPF_30, key=lambda y: filtered_dict_for_SPF_30.get(y))
 print(min_val_of_SPF_30, "has the lowest price in SPF-30 Category")
@@ -59,22 +57,23 @@ print("Adding them to the Cart.")
 
 time.sleep(3)
 map_dict_list=[]
+#converting the dictionaty to list
 for list_for_driver1_values, concat_list in Dict.items():
     map_dict_list.append((list_for_driver1_values, concat_list))
-locations1 = [i for i, t in enumerate(map_dict_list) if t[0]==min_val_of_SPF_50]
 
-loc1_for_clicking_min_SPF_50= locations1[0]
+locations1 = [i for i, t in enumerate(map_dict_list) if t[0]==min_val_of_SPF_50]
+loc1_for_clicking_min_SPF_50= locations1[0]  #getting the int value of location where SPF-50's min val is stored
 
 locations2 = [i for i, e in enumerate(map_dict_list) if e[0]==min_val_of_SPF_30]
-loc2_for_clicking_min_SPF_30 = locations2[0]
+loc2_for_clicking_min_SPF_30 = locations2[0]  #getting the int value of location where SPF-30's min val is stored
 
 button=driver.find_elements_by_xpath('//button[contains(@class,"btn btn-primary")]')
 button=button[loc1_for_clicking_min_SPF_50]
-button.click()
+button.click() #clicking the min priced SPF-50
 
 button=driver.find_elements_by_xpath('//button[contains(@class,"btn btn-primary")]')
 button=button[int(loc2_for_clicking_min_SPF_30)]
-button.click()
+button.click() #clicking the min priced SPF-30
 
 time.sleep(1)
 
@@ -89,10 +88,6 @@ cart_rows=cart_table.find_elements_by_xpath("//tbody/descendant::tr")
 for cart_item in cart_rows:
     print(cart_item.text)
     
-'''#if min_val__of_SPF_50 and min_val_of_SPF_30 in cart_item.text:
-    print("success")
-else:
-    print("fail")'''
 
 #Clicking the pay button after verifying the cart
 button_to_pay = driver.find_element_by_xpath("//button[contains(@type,'submit')]")
