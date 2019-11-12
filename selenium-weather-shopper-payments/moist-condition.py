@@ -9,7 +9,7 @@ E-mail : tcvarun96@gmail.com'''
 
 import time
 from selenium import webdriver
-import rand_email
+import rand_email  #getting the rand_email script which contains random email,phone num, zip code ,cvv
 
 driver=webdriver.Firefox()
 driver.maximize_window()
@@ -31,6 +31,7 @@ for j in driver2:
     list_to_append_driver2_text_values.append(j.text.split("\n"))
     list_for_driver2_values.append(j.text)
 
+# Creating two pseudo lists for spliting the price based on the users requirment
 psuedo_list1_to_get_int_values = list_for_driver2_values[:3] 
 list_to_store_int_values = [int(sub.split('.')[1]) for sub in psuedo_list1_to_get_int_values]
 
@@ -39,18 +40,15 @@ list2_to_store_int_values = [int(sub.split(':')[1]) for sub in psuedo_list2_to_g
 
 #concatenating the above two pseudo lists to as int
 concat_list = list_to_store_int_values+list2_to_store_int_values
+Dict = dict(zip(list_for_driver1_values, concat_list)) #concatinating 2 lists to make them as key and value.
 
-Dict = dict(zip(list_for_driver1_values, concat_list))
-
-filtered_dict_for_Aloe = {list_for_driver1_values:concat_list for (list_for_driver1_values, concat_list) in Dict.items() if 'Aloe' in list_for_driver1_values}
-
+#filterning the dictionary for Aloe and Almond
+filtered_dict_for_Aloe = {list_for_driver1_values:concat_list for (list_for_driver1_values, concat_list) in Dict.items() if 'Aloe' in list_for_driver1_values} 
 filtered_dict_for_Almond = {list_for_driver1_values:concat_list for (list_for_driver1_values, concat_list) in Dict.items() if 'Almond' in list_for_driver1_values}
 
-
-
+#finding out which aloe and almond has lowest price.
 min_val_of_Aloe = min(filtered_dict_for_Aloe, key=lambda x: filtered_dict_for_Aloe.get(x))
 print(min_val_of_Aloe, "has the lowest price in Aloe category")
-
 
 min_val_of_Almond = min(filtered_dict_for_Almond, key=lambda y: filtered_dict_for_Almond.get(y))
 print(min_val_of_Almond, "has the lowest price in Almond Category")
@@ -58,23 +56,24 @@ print(min_val_of_Almond, "has the lowest price in Almond Category")
 print("Adding them to the Cart.")
 
 time.sleep(3)
-map_dict_list=[]
+map_dict_list=[] #creating an empty list 
+#converting the dictionaty to list
 for list_for_driver1_values, concat_list in Dict.items():
     map_dict_list.append((list_for_driver1_values, concat_list))
-locations1 = [i for i, t in enumerate(map_dict_list) if t[0]==min_val_of_Aloe]
 
-loc1_for_clicking_min_aloe= locations1[0]
+locations1 = [i for i, t in enumerate(map_dict_list) if t[0]==min_val_of_Aloe]
+loc1_for_clicking_min_aloe= locations1[0] #getting the int value of location where aloe's min val is stored
 
 locations2 = [i for i, e in enumerate(map_dict_list) if e[0]==min_val_of_Almond]
-loc2_for_clicking_min_almond = locations2[0]
+loc2_for_clicking_min_almond = locations2[0]  #getting the int value of location where almonds min val is stored
 
 button=driver.find_elements_by_xpath('//button[contains(@class,"btn btn-primary")]')
 button=button[loc1_for_clicking_min_aloe]
-button.click()
+button.click() #clicking the minimum priced aloe 
 
 button=driver.find_elements_by_xpath('//button[contains(@class,"btn btn-primary")]')
 button=button[int(loc2_for_clicking_min_almond)]
-button.click()
+button.click() #clicking the min priced almond
 
 time.sleep(1)
 
@@ -84,15 +83,12 @@ cart.click()
 
 time.sleep(2)
 
+#checking the cart for the items
 cart_table=driver.find_element_by_xpath("//table[contains(@class,'table table-striped')]")
 cart_rows=cart_table.find_elements_by_xpath("//tbody/descendant::tr")
 for cart_item in cart_rows:
     print(cart_item.text)
     
-'''if min_val_of_Aloe and min_val_of_Almond in cart_item.text:
-    print("success")
-else:
-    print("fail")'''
 
 #Clicking the pay button after verifying the cart
 button_to_pay = driver.find_element_by_xpath("//button[contains(@type,'submit')]")
